@@ -1,51 +1,46 @@
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
 TOKEN = "8636158499:AAE9tAAUSbROKfipRbdiBKeV2pZGF6dxKu0"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     text = """
 🚀 ORDERPRO — Центр приёма заказов
 
 Добро пожаловать!
 
-Вы подключены к системе приёма задач OrderPro.
-Я цифровой ассистент, который помогает быстро оформить заказ и передать его специалисту.
+Вы подключены к системе приёма задач.
 
 📌 Как это работает:
 
-1️⃣ Вы отправляете описание задачи
-2️⃣ Система регистрирует и анализирует заказ
-3️⃣ Специалист связывается с вами
+1️⃣ Вы отправляете описание задачи  
+2️⃣ Система фиксирует заявку  
+3️⃣ Специалист свяжется с вами  
 
-Чтобы начать, отправьте одним сообщением:
+Отправьте сообщение в формате:
 
-🛠 Что нужно сделать
-💰 Примерный бюджет
-⏳ Срок выполнения
-
-Пример заказа:
-
-Создать Telegram-бота для интернет-магазина
-Бюджет: 5000
-Срок: 3 дня
-
-⚡ Обычно ответ специалиста занимает 5–10 минут.
-🔒 Все заявки автоматически фиксируются в системе.
+🔧 Что нужно сделать  
+💰 Бюджет  
+⏳ Срок
 """
-
     await update.message.reply_text(text)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text
-    await update.message.reply_text("✅ Заказ получен. Специалист изучит его и скоро свяжется с вами.")
+    user_text = update.message.text
+
+    await update.message.reply_text(
+        "✅ Заявка получена!\n\n"
+        "Наш специалист скоро свяжется с вами."
+    )
+
+    print("НОВЫЙ ЗАКАЗ:")
+    print(user_text)
 
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-print("OrderPro бот запущен")
+print("Бот запущен...")
 
 app.run_polling()
